@@ -1,0 +1,1 @@
+# Creating a static website using terraform in AWS
