@@ -11,29 +11,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform Initialize
-      env:
-        AWS_ACCESS_KEY_ID: ${{  secrets.aws_access_key }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
-      run: terraform init
+      - name: Terraform Initialize
+        run: terraform init
+        env:
+          TF_VAR_aws_access_key: ${{ secrets.aws_access_key }}
+          TF_VAR_aws_secret_key: ${{ secrets.aws_secret_key }}
+          TF_VAR_region: "us-east-1"
 
-    - name: Terraform Validate
-      run: terraform validate
+      - name: Terraform Validate
+        run: terraform validate
 
-    - name: Terraform Plan
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key}}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
-      run: terraform plan
+      - name: Terraform Plan
+        run: terraform plan
+        env:
+          TF_VAR_aws_access_key: ${{ secrets.aws_access_key }}
+          TF_VAR_aws_secret_key: ${{ secrets.aws_secret_key }}
+          TF_VAR_region: "us-east-1"
 
-    - name: Terraform Apply
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
-      run: terraform apply -auto-approve
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_aws_access_key: ${{ secrets.aws_access_key }}
+          TF_VAR_aws_secret_key: ${{ secrets.aws_secret_key }}
+          TF_VAR_region: "us-east-1"
