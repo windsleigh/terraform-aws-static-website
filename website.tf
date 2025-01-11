@@ -1,3 +1,4 @@
+# Configure S3 bucket for static website hosting
 resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.bucket.id
 
@@ -10,7 +11,9 @@ resource "aws_s3_bucket_website_configuration" "website" {
   }
 }
 
+# Add bucket policy for public read access
 resource "aws_s3_bucket_policy" "website" {
+  depends_on = [aws_s3_bucket_public_access_block.public_block]
   bucket = aws_s3_bucket.bucket.id
 
   policy = jsonencode({

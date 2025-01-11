@@ -2,7 +2,7 @@ resource "aws_s3_bucket" "bucket" {
   bucket = var.bucketname
 }
 
-resource "aws_s3_bucket_ownership_controls" "example" {
+resource "aws_s3_bucket_ownership_controls" "ownership" {
   bucket = aws_s3_bucket.bucket.id
 
   rule {
@@ -10,7 +10,7 @@ resource "aws_s3_bucket_ownership_controls" "example" {
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "example" {
+resource "aws_s3_bucket_public_access_block" "public_block" {
   bucket = aws_s3_bucket.bucket.id
 
   block_public_acls       = false
@@ -19,10 +19,10 @@ resource "aws_s3_bucket_public_access_block" "example" {
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_acl" "example" {
+resource "aws_s3_bucket_acl" "bucket_acl" {
   depends_on = [
-    aws_s3_bucket_ownership_controls.example,
-    aws_s3_bucket_public_access_block.example,
+    aws_s3_bucket_ownership_controls.ownership,
+    aws_s3_bucket_public_access_block.public_block,
   ]
 
   bucket = aws_s3_bucket.bucket.id
