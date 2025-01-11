@@ -1,4 +1,4 @@
-name: "Terraform Infrastructure"
+name: 'Terraform'
 
 on:
   push:
@@ -7,25 +7,33 @@ on:
 
 jobs:
   terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
-      AWS_DEFAULT_REGION: us-east-1
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
 
-      - name: Terraform Init
-        run: terraform init
+    - name: Terraform Initialize
+      env:
+        AWS_ACCESS_KEY_ID: ${{  secrets.aws_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
+      run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan
+    - name: Terraform Validate
+      run: terraform validate
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
+    - name: Terraform Plan
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key}}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
+      run: terraform plan
+
+    - name: Terraform Apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_key }}
+      run: terraform apply -auto-approve
