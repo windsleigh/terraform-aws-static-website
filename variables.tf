@@ -1,5 +1,5 @@
 variable "bucketname" {
-    default = "aws-terraform-static-website-windsleigh"
+    default = "windsleigh"
 }
 
 variable "aws_access_key" {
